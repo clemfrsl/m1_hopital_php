@@ -20,7 +20,7 @@ CREATE TABLE Patients (
 Create table Pays (CodePays VARCHAR(2), Libellé VARCHAR(255), primary key(CodePays));
 Create table Motifs (CodeMotifs INT, Libellé VARCHAR(255), primary key(CodeMotifs));
 Create table Sexe (CodeSexe VARCHAR(1), Libellé VARCHAR(255), primary key(CodeSexe));
-
+Create table Media (CodeMedia INT AS PRIMARY KEY, TypeMedia VARCHAR(10), URLMedia VARCHAR(50));
 
 
 
