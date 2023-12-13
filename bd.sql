@@ -48,6 +48,8 @@ INSERT INTO Patients VALUES(6, 'CASSEL', 'Vincent', 'M', '1966-11-23', '16611750
 INSERT INTO Patients VALUES(7, 'GREEN', 'Eva', 'F', '1980-06-17', '280067500400733', 'FR', '2023-11-15', 2);
 INSERT INTO Patients VALUES(8, 'EFIRA', 'Virginie', 'F', '1977-05-05', null, 'BE', '2023-10-30', 2)
 
+INSERT INTO Media VALUES(1, 1, "photo", "pizza", '2023-02-01');
+INSERT INTO Media VALUES(2, 1, "prescription", "Mario", '2023-02-01');
 
 
 
