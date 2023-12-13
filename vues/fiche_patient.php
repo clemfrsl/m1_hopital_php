@@ -54,12 +54,12 @@
                         } 
                         echo '<h2>' . $instances2[$lienClique][1] . " " . $instances2[$lienClique][2]."</h2>" ; 
                         echo '<p> Sexe : ' . $sexe ;
-                        echo '<p> Date de naissance : ' . $instances2[$lienClique][4] ;
+                        echo '<p> Date de naissance : ' . date("d-m-Y", strtotime($instances2[$lienClique][4])) ;
                         echo '<p> Pays de naissance : ' . $instances2[$lienClique][12] ;
                         if ($instances2[$lienClique][5] != ""){
                             echo '<p> Numero sécurité social : ' . $instances2[$lienClique][5] ;
                         }
-                        echo '<p> Date entrée : ' . $instances2[$lienClique][7] ;
+                        echo '<p> Date entrée : ' . date("d-m-Y", strtotime($instances2[$lienClique][7])) ;
 
                         echo '<p> Motif de visite : ' . $instances2[$lienClique][10] ;
                         ?>
