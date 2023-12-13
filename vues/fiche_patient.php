@@ -27,6 +27,18 @@
     else{
         $photo = null;
     }
+
+    // Récupération de la prescription associé dans la base de données
+    $requete_prescription = "SELECT URLMedia FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription') = DateEnregistrement";
+    $result_prescription = mysqli_query($connexion, $requete_prescription);
+    $row_prescription = mysqli_fetch_assoc($result_prescription);
+    if ($row_prescription != null){
+        $prescription = "data/". $row_prescription['URLMedia'].".pdf";
+    }
+    else{
+        $prescription = null;
+    }
+
     ?>
 
     <div class="container row">
@@ -53,6 +65,20 @@
                         ?>
                         </br></br>
                         <a href="index.php" class="btn btn-success" title="Retour"> Retour </a>
+                        <?php
+                            if ($prescription != null) {
+                                echo '<a href="#" class="btn btn-primary" id="dernierePrescription">Dernière Prescription</a>';
+                                echo '<script>';
+                                echo 'var prescription = "' . $prescription . '";';
+                                echo '</script>';
+                            }
+                            ?>
+                            <script>
+                            document.getElementById('dernierePrescription').addEventListener('click', function() {
+                                window.open(prescription);
+                            });
+                            </script>
+                        
                     </div>
                 </div>
         </div>
