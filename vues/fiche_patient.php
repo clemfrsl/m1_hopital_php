@@ -16,6 +16,17 @@
     $result_sexe = mysqli_query($connexion, $requete_sexe);
     $row_sexe = mysqli_fetch_assoc($result_sexe);
     $sexe = $row_sexe['libellé'];
+
+    // Récupération de la photo associé dans la base de données
+    $requete_photo = "SELECT URLMedia FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo') = DateEnregistrement";
+    $result_photo = mysqli_query($connexion, $requete_photo);
+    $row_photo = mysqli_fetch_assoc($result_photo);
+    if ($row_photo != null){
+        $photo = "'data/". $row_photo['URLMedia']."'";
+    }
+    else{
+        $photo = null;
+    }
     ?>
 
     <div class="container row">
@@ -26,6 +37,9 @@
                     <div class="col-10">
                         <?php 
                         // Affichage des détails du patient
+                        if($photo != null){
+                            echo "<img src=".$photo." alt='image'>";
+                        } 
                         echo '<h2>' . $instances2[$lienClique][1] . " " . $instances2[$lienClique][2]."</h2>" ; 
                         echo '<p> Sexe : ' . $sexe ;
                         echo '<p> Date de naissance : ' . $instances2[$lienClique][4] ;
