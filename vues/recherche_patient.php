@@ -6,11 +6,11 @@
     $message = " ";
 
     // Initialisation des variables de session
-    $_SESSION['nom'] = null;
-    $_SESSION['motif'] = null;
-    $_SESSION['pays'] = null;
-    $_SESSION['dateMin'] = null;
-    $_SESSION['dateMax'] = null;
+    $_SESSION['nom'];
+    $_SESSION['motif'];
+    $_SESSION['pays'];
+    $_SESSION['dateMin'];
+    $_SESSION['dateMax'];
 
     // Récupération des motifs et des pays depuis la base de données
     $motifs = getInstances($connexion, "Motifs", "Libellé");
@@ -172,7 +172,7 @@
                 </br>
                 <div class="md-3 text-center">
                     <button type="submit" name="submit" class="btn btn-success">Rechercher</button>
-                    <a href="index.php" class="btn btn-danger" onclick="resetInstances()" title="Retour"> Retour </a>
+                    <button type='reset' class="btn btn-danger" name="reset" value="Réinitialiser"> Réinitialiser </button>
                 </div>
 
             </form>
@@ -198,7 +198,9 @@
                                 $i++;
                             }
                         }
+                                            
                     ?>
+
             </div>
         </div>
     </div>

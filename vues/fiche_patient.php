@@ -42,7 +42,7 @@
     ?>
 
     <div class="container row">
-        <div class="col-md-6 card text-bg-secondary mb-3">
+        <div class="col-md-4 card text-bg-secondary mb-3">
             <br>
                 <div class="md-3">
                 
@@ -67,7 +67,7 @@
                         <a href="index.php" class="btn btn-success" title="Retour"> Retour </a>
                         <?php
                             if ($prescription != null) {
-                                echo '<a href="#" class="btn btn-primary" id="dernierePrescription">Dernière Prescription</a>';
+                                echo '<a href="#" class="btn btn-warning text-white" id="dernierePrescription">Dernière Prescription</a>';
                                 echo '<script>';
                                 echo 'var prescription = "' . $prescription . '";';
                                 echo '</script>';
@@ -81,6 +81,51 @@
                         
                     </div>
                 </div>
+                
         </div>
+        <div class="col-md-1 text-bg-transparent mb-3">
+        </div>
+        <div class="col-md-7 card text-bg-secondary mb-3">
+            <p> Ajout prescription : (taille max --> x Giga)
+            <form action='#' method="post"  enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="form-select" name='typeDoc'>
+                            <option value='prescription'> Prescritpion </option>
+                            <option value='photo'> Photo </option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" type="file" name="userfile" size="50">
+                    </div>
+                    <div class="col-md-5">
+                        
+                    </div>
+                </div>
+                <br>
+                <input type="submit" class="btn btn-success text-white" name="submit">
+            </form>
+
+        </div>
+
     </div>
+
+    
+
+    <?php
+        if(isset($_POST['submit'])) {
+           
+            $type = $_POST['typeDoc'];
+            echo $type;
+            $fichier = $_FILES['userfile'];
+            echo $_FILES['userfile']['tmp_name'];
+            var_dump($_FILES);
+            
+            ajoutPrescription($connexion, $fichier['name'], $instances2[$lienClique][1], $type);
+            
+            
+        }
+    ?>
+
+
 </main>

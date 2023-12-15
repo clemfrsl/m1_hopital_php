@@ -87,5 +87,32 @@ function countInstances($connexion, $nomTable) {
         return mysqli_fetch_all($res, PDO::FETCH_ASSOC);
        
     }
+    
+    //ajout prescription
+    function ajoutPrescription($connexion, $fichier, $nom, $type) {
+        
+        $requeteCodePatient = "SELECT CodePatients FROM Patients WHERE Nom='".$nom."';";
+        $resCodePatient = mysqli_query($connexion, $requeteCodePatient);
+        $codePatient = mysqli_fetch_all($resCodePatient, PDO::FETCH_ASSOC);
+        
+        $dateHeure =  date('Y-m-d H:i:s');
+        
+        $requete = "INSERT INTO Media (CodePatients, DateEnregistrement, TypeMedia, URLMedia) VALUES (".$codePatient[0][0].", '".$dateHeure."', '".$type."', '".$fichier."')";
+        $res = mysqli_query($connexion, $requete);
+     
+        return $res;
+    }
 
+    function enregistrerDoc($fichier) {
+        return $local='../data';
+    }
+   
+    /*$remote='http://static.ccm2.net/www.commentcamarche.net/_skin/_local/img/logo.png?201007091112';
+     
+    $DownloadBinaryFile=new DownloadBinaryFile();
+    if ($DownloadBinaryFile->load($remote)==TRUE) {
+        $DownloadBinaryFile->saveTo($local);
+    } else {
+        echo 'download failed';
+    }*/
 ?>
