@@ -89,7 +89,7 @@ function countInstances($connexion, $nomTable) {
     }
     
     //ajout prescription
-    function ajoutPrescription($connexion, $fichier, $nom, $type) {
+    function ajoutDocument($connexion, $fichier, $nom, $type) {
         
         $requeteCodePatient = "SELECT CodePatients FROM Patients WHERE Nom='".$nom."';";
         $resCodePatient = mysqli_query($connexion, $requeteCodePatient);
@@ -97,22 +97,9 @@ function countInstances($connexion, $nomTable) {
         
         $dateHeure =  date('Y-m-d H:i:s');
         
-        $requete = "INSERT INTO Media (CodePatients, DateEnregistrement, TypeMedia, URLMedia) VALUES (".$codePatient[0][0].", '".$dateHeure."', '".$type."', '".$fichier."')";
+        $requete = "INSERT INTO Media (CodePatients, TypeMedia, URLMedia, DateEnregistrement) VALUES (".$codePatient[0][0].", '".$type."', '".$fichier."', NOW())";
         $res = mysqli_query($connexion, $requete);
      
         return $res;
     }
-
-    function enregistrerDoc($fichier) {
-        return $local='../data';
-    }
-   
-    /*$remote='http://static.ccm2.net/www.commentcamarche.net/_skin/_local/img/logo.png?201007091112';
-     
-    $DownloadBinaryFile=new DownloadBinaryFile();
-    if ($DownloadBinaryFile->load($remote)==TRUE) {
-        $DownloadBinaryFile->saveTo($local);
-    } else {
-        echo 'download failed';
-    }*/
 ?>

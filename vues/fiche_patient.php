@@ -33,7 +33,7 @@
     $result_prescription = mysqli_query($connexion, $requete_prescription);
     $row_prescription = mysqli_fetch_assoc($result_prescription);
     if ($row_prescription != null){
-        $prescription = "data/". $row_prescription['URLMedia'].".pdf";
+        $prescription = "data/". $row_prescription['URLMedia'];
     }
     else{
         $prescription = null;
@@ -83,11 +83,13 @@
                 </div>
                 
         </div>
+
         <div class="col-md-1 text-bg-transparent mb-3">
         </div>
+
         <div class="col-md-7 card text-bg-secondary mb-3">
-            <p> Ajout prescription : (taille max --> x Giga)
-            <form action='#' method="post"  enctype="multipart/form-data">
+            <p> Ajout document : (taille max --> x Giga)
+            <form action=# method="post"  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-4">
                         <select class="form-select" name='typeDoc'>
@@ -103,8 +105,33 @@
                     </div>
                 </div>
                 <br>
-                <input type="submit" class="btn btn-success text-white" name="submit">
+                <input type="submit" class="btn btn-success" name="submit">
             </form>
+
+            <?php
+                if (isset($_POST["submit"])) {
+                    if (isset($_FILES["userfile"]) && $_FILES["userfile"]["error"] == 0) {
+                        $targetDirectory = "data/"; // Dossier de destination pour enregistrer les documents
+                        $typeDoc = $_POST["typeDoc"];
+                        $targetFile = $targetDirectory . $instances2[$lienClique][0] . "_" . basename($_FILES["userfile"]["name"]);
+                
+                        if (file_exists($targetFile)) {
+                            echo "Désolé, ce fichier existe déjà.";
+                        } else {
+                            if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $targetFile)) {
+                                echo "Le document a été téléchargé avec succès.";
+                                $fichier = $instances2[$lienClique][0] . "_" .$_FILES['userfile']['name'];
+                                echo $fichier;
+                                ajoutDocument($connexion, $fichier, $instances2[$lienClique][1], $typeDoc);
+                            } else {
+                                echo "Une erreur s'est produite lors du téléchargement du document.";
+                            }
+                        }
+                    } else {
+                        echo "Erreur : Veuillez sélectionner un document à télécharger.";
+                    }
+                }
+            ?>
 
         </div>
 
@@ -112,20 +139,6 @@
 
     
 
-    <?php
-        if(isset($_POST['submit'])) {
-           
-            $type = $_POST['typeDoc'];
-            echo $type;
-            $fichier = $_FILES['userfile'];
-            echo $_FILES['userfile']['tmp_name'];
-            var_dump($_FILES);
-            
-            ajoutPrescription($connexion, $fichier['name'], $instances2[$lienClique][1], $type);
-            
-            
-        }
-    ?>
-
+    
 
 </main>
