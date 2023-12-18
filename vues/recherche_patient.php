@@ -6,11 +6,11 @@
     $message = " ";
 
     // Initialisation des variables de session
-    $_SESSION['nom'];
-    $_SESSION['motif'];
-    $_SESSION['pays'];
-    $_SESSION['dateMin'];
-    $_SESSION['dateMax'];
+    $_SESSION['nom'] = '';
+    $_SESSION['motif'] = '';
+    $_SESSION['pays'] = '';
+    $_SESSION['dateMin'] = '';
+    $_SESSION['dateMax'] = '';
 
     // Récupération des motifs et des pays depuis la base de données
     $motifs = getInstances($connexion, "Motifs", "Libellé");

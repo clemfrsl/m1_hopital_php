@@ -102,4 +102,23 @@ function countInstances($connexion, $nomTable) {
      
         return $res;
     }
+
+    //verifie si est un fichier pdf
+    function estPDF($fichier) {
+        $fichierInfo = pathinfo($fichier["userfile"]["name"]);
+        $fichierExtension = strtolower($fichierInfo['extension']);
+        return strtolower($fichierExtension) == "pdf";
+    }
+
+    function verificationTaille($fichier) {
+        $maxFileSize = 10000000; // 10 Mo (en octets)
+        return $fichier["userfile"]["size"] > $maxFileSize;
+    }
+
+    function verifierFormat($fichier) {
+        $largeurMax = 800; 
+        $hauteurMax = 600; 
+        list($largeur, $hauteur) = getimagesize($fichier["userfile"]["tmp_name"]);
+        return $largeur > $largeurMax || $hauteur > $hauteurMax;
+    }
 ?>
