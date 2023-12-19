@@ -7,6 +7,7 @@
     $connexion = getConnexionBD();
     $message = " ";
     $lienClique = null;
+
     //vérification soumission du formulaire 
     $lienClique = $_GET['lien'];
     $instances2 = $_SESSION['instances'];
@@ -27,9 +28,8 @@
     else{
         $signaturePho = null;
     }
-        
-        $contenuPho = glob("data".'/*');
-        $photo= trouveNom($contenuPho, $signaturePho);
+    $contenuPho = glob("data".'/*');
+    $photo= trouveNom($contenuPho, $signaturePho);
 
     // Récupération de la prescription associé dans la base de données
     $requete_prescription = "SELECT URLMedia, Signature FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription') = DateEnregistrement";
@@ -41,8 +41,8 @@
     else{
         $signaturePres = null;
     }
-        $contenuPres = glob("data" . '/*');
-        $prescription = trouveNom($contenuPres, $signaturePres);
+    $contenuPres = glob("data" . '/*');
+    $prescription = trouveNom($contenuPres, $signaturePres);
         
 
     ?>
@@ -89,11 +89,13 @@
                                     echo '</script>';
                                 }
                                 ?>
+
                                 <script>
                                 document.getElementById('dernierePrescription').addEventListener('click', function() {
                                     window.open(prescription);
                                 });
                                 </script>
+
                         </div>
                         <br>
                         
@@ -110,7 +112,7 @@
             <!-- Ajout d'un document lié au patient -->
             <p> Ajout document : (taille max --> 10 Mo)
             <p>  -  Prescription : (Fichier PDF)
-            <p>  -  Photo : (Fichier JPEG)
+
             <form action='#' method="post"  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-4">
@@ -128,8 +130,9 @@
                 </div>
                 <br>
                 <input type="submit" class="btn btn-success" name="submit">
+                <?php echo $_SESSION['message']; ?>
             </form>
-
+            
             
 
             <?php
@@ -137,42 +140,40 @@
                 if (isset($_POST["submit"])) {
 
                     header("Location: index.php?page=afficher&lien=".$lienClique."");
-                    
+
                     if (isset($_FILES["userfile"]) && $_FILES["userfile"]["error"] == 0) {
                         $targetDirectory = "data/"; 
                         $typeDoc = $_POST["typeDoc"];
                         $targetFile = $targetDirectory . $instances2[$lienClique][0] . "_" . basename($_FILES["userfile"]["name"]);
                         
                         if (verificationTaille($_FILES)) {
-                            echo "Erreur : La taille du fichier dépasse la limite autorisée.";
+                            $_SESSION['message'] =  "Erreur : La taille du fichier dépasse la limite autorisée.";
 
                         } elseif (file_exists($targetFile)) {
-                            echo "Désolé, ce fichier existe déjà.";
+                            $_SESSION['message'] =  "Désolé, ce fichier existe déjà.";
 
                         } elseif ($typeDoc == "prescription" and !estPDF($_FILES)) {
-                            echo "Désolé, une prescription doit être un fichier pdf";
+                            $_SESSION['message'] =  "Désolé, une prescription doit être un fichier pdf";
 
-                        } /*elseif ($typeDoc == "photo" and !estJPEG($_FILES)) {
-                            echo "Désolé, une photo doit être un fichier jpeg";
-
-                        }*/else {
+                        } else {
                             if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $targetFile)) {
-                                echo "Le document a été téléchargé avec succès.";
+                                $_SESSION['message'] =  "Le document a été téléchargé avec succès.";
+
                                 $fichier = $instances2[$lienClique][0] . "_" .$_FILES['userfile']['name'];
-                                echo $fichier;
                                 ajoutDocument($connexion, $fichier, $instances2[$lienClique][1], $typeDoc);
                                 ajoutHash($connexion, $fichier);
+
                             } else {
-                                echo "Une erreur s'est produite lors du téléchargement du document.";
+                                $_SESSION['message'] =  "Une erreur s'est produite lors du téléchargement du document.";
                             }
                         }
 
                     } else {
-                        echo "Erreur : Veuillez sélectionner un document à télécharger.";
+                        $_SESSION['message'] =  "Erreur : Veuillez sélectionner un document à télécharger.";
                     }
-
                 }
             ?>
+            
 
         </div>
 

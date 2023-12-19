@@ -12,7 +12,8 @@
     $_SESSION['pays'] = '';
     $_SESSION['dateMin'] = '';
     $_SESSION['dateMax'] = '';
-
+    $_SESSION['message'] = '';
+    
     // Récupération des motifs et des pays depuis la base de données
     $motifs = getInstances($connexion, "Motifs", "Libellé");
     $pays = getInstances($connexion, "Pays", "Libellé");

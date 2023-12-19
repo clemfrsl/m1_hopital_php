@@ -110,13 +110,6 @@ function countInstances($connexion, $nomTable) {
         return strtolower($fichierExtension) == "pdf";
     }
 
-    //verifie si est un fichier jpeg
-    function estJPEG($fichier) {
-        $fichierInfo = pathinfo($fichier["userfile"]["name"]);
-        $fichierExtension = strtolower($fichierInfo['extension']);
-        return strtolower($fichierExtension) == "jpeg";
-    }
-
     function verificationTaille($fichier) {
         $maxFileSize = 10000000; // 10 Mo (en octets)
         return $fichier["userfile"]["size"] > $maxFileSize;
