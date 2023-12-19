@@ -36,15 +36,12 @@
     $result_prescription = mysqli_query($connexion, $requete_prescription);
     $row_prescription = mysqli_fetch_assoc($result_prescription);
     if ($row_prescription != null){
-        //$prescription = "data/". $row_prescription['URLMedia'];
         $signaturePres = $row_prescription['Signature'];
     }
     else{
         $signaturePres = null;
     }
         $contenuPres = glob("data" . '/*');
-
-        
         $prescription = trouveNom($contenuPres, $signaturePres);
         
 
@@ -59,8 +56,13 @@
                     <div class="col-10">
                         <?php 
                         // Affichage des détails du patient
-                        if($photo != null){
-                            echo "<img src=".$photo." alt='image'>";
+                        if($photo != null && file_exists($photo)){
+                            if(substr($photo, -4) == ".pdf"){
+                                echo '<iframe src="'.$photo.'" width="200" height="280"></iframe>';
+                            }
+                            else{
+                                echo "<img src='".$photo."' alt='image' width='200' height='280'>";
+                            }
                         } 
                         echo '<h2>' . $instances2[$lienClique][1] . " " . $instances2[$lienClique][2]."</h2>" ; 
                         echo '<p> Sexe : ' . $sexe ;
@@ -108,7 +110,7 @@
             <!-- Ajout d'un document lié au patient -->
             <p> Ajout document : (taille max --> 10 Mo)
             <p>  -  Prescription : (Fichier PDF)
-            <p>  -  Photo : (Format Photo : 800x600)
+            <p>  -  Photo : (Fichier JPEG)
             <form action='#' method="post"  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-4">
@@ -133,21 +135,13 @@
             <?php
                 // Enregistrement du fichier dans la base de donnée et dans le dossier local data
                 if (isset($_POST["submit"])) {
-                    
+
                     header("Location: index.php?page=afficher&lien=".$lienClique."");
-                    
-                    
-                   
-                    
-                    
-                    
                     
                     if (isset($_FILES["userfile"]) && $_FILES["userfile"]["error"] == 0) {
                         $targetDirectory = "data/"; 
                         $typeDoc = $_POST["typeDoc"];
                         $targetFile = $targetDirectory . $instances2[$lienClique][0] . "_" . basename($_FILES["userfile"]["name"]);
-                        
-                        
                         
                         if (verificationTaille($_FILES)) {
                             echo "Erreur : La taille du fichier dépasse la limite autorisée.";
@@ -158,16 +152,15 @@
                         } elseif ($typeDoc == "prescription" and !estPDF($_FILES)) {
                             echo "Désolé, une prescription doit être un fichier pdf";
 
-                        } elseif (verifierFormat($_FILES)) {
-                            echo "Erreur : Les dimensions de la photo dépassent la limite autorisée.";
-                            
-                        }else {
+                        } /*elseif ($typeDoc == "photo" and !estJPEG($_FILES)) {
+                            echo "Désolé, une photo doit être un fichier jpeg";
+
+                        }*/else {
                             if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $targetFile)) {
                                 echo "Le document a été téléchargé avec succès.";
                                 $fichier = $instances2[$lienClique][0] . "_" .$_FILES['userfile']['name'];
                                 echo $fichier;
                                 ajoutDocument($connexion, $fichier, $instances2[$lienClique][1], $typeDoc);
-                                echo "hhihhi";
                                 ajoutHash($connexion, $fichier);
                             } else {
                                 echo "Une erreur s'est produite lors du téléchargement du document.";
@@ -177,6 +170,7 @@
                     } else {
                         echo "Erreur : Veuillez sélectionner un document à télécharger.";
                     }
+
                 }
             ?>
 

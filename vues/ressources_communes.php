@@ -110,14 +110,21 @@ function countInstances($connexion, $nomTable) {
         return strtolower($fichierExtension) == "pdf";
     }
 
+    //verifie si est un fichier jpeg
+    function estJPEG($fichier) {
+        $fichierInfo = pathinfo($fichier["userfile"]["name"]);
+        $fichierExtension = strtolower($fichierInfo['extension']);
+        return strtolower($fichierExtension) == "jpeg";
+    }
+
     function verificationTaille($fichier) {
         $maxFileSize = 10000000; // 10 Mo (en octets)
         return $fichier["userfile"]["size"] > $maxFileSize;
     }
 
     function verifierFormat($fichier) {
-        $largeurMax = 1000;
-        $hauteurMax = 1000; 
+        $largeurMax = 600;
+        $hauteurMax = 800; 
         list($largeur, $hauteur) = getimagesize($fichier["userfile"]["tmp_name"]);
         return $largeur > $largeurMax || $hauteur > $hauteurMax;
     }
@@ -152,4 +159,5 @@ function countInstances($connexion, $nomTable) {
         
         return $res;
     }
+
 ?>
