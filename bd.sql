@@ -22,7 +22,7 @@ CREATE TABLE Patients (
 Create table Pays (CodePays VARCHAR(2), Libellé VARCHAR(255), primary key(CodePays));
 Create table Motifs (CodeMotifs INT, Libellé VARCHAR(255), primary key(CodeMotifs));
 Create table Sexe (CodeSexe VARCHAR(1), Libellé VARCHAR(255), primary key(CodeSexe));
-Create table Media (CodeMedia INT AUTO_INCREMENT, CodePatients INT REFERENCES Patients(CodePatients), TypeMedia VARCHAR(20), URLMedia MEDIUMTEXT , DateEnregistrement Datetime, primary key(CodeMedia));
+Create table Media (CodeMedia INT AUTO_INCREMENT, CodePatients INT REFERENCES Patients(CodePatients), TypeMedia VARCHAR(20), URLMedia MEDIUMTEXT , DateEnregistrement Datetime, Signature MEDIUMTEXT, primary key(CodeMedia));
 
 
 INSERT INTO Pays VALUES('FR', 'France');

@@ -18,26 +18,35 @@
     $sexe = $row_sexe['libellé'];
 
     // Récupération de la photo associé dans la base de données
-    $requete_photo = "SELECT URLMedia FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo') = DateEnregistrement";
+    $requete_photo = "SELECT URLMedia, Signature FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'photo') = DateEnregistrement";
     $result_photo = mysqli_query($connexion, $requete_photo);
     $row_photo = mysqli_fetch_assoc($result_photo);
     if ($row_photo != null){
-        $photo = "'data/". $row_photo['URLMedia']."'";
+        $signaturePho = $row_photo['Signature'];
     }
     else{
-        $photo = null;
+        $signaturePho = null;
     }
+        
+        $contenuPho = glob("data".'/*');
+        $photo= trouveNom($contenuPho, $signaturePho);
 
     // Récupération de la prescription associé dans la base de données
-    $requete_prescription = "SELECT URLMedia FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription') = DateEnregistrement";
+    $requete_prescription = "SELECT URLMedia, Signature FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription'  and (SELECT MAX(DateEnregistrement) FROM Media WHERE CodePatients = '".$instances2[$lienClique][0]."' and TypeMedia = 'prescription') = DateEnregistrement";
     $result_prescription = mysqli_query($connexion, $requete_prescription);
     $row_prescription = mysqli_fetch_assoc($result_prescription);
     if ($row_prescription != null){
-        $prescription = "data/". $row_prescription['URLMedia'];
+        //$prescription = "data/". $row_prescription['URLMedia'];
+        $signaturePres = $row_prescription['Signature'];
     }
     else{
-        $prescription = null;
+        $signaturePres = null;
     }
+        $contenuPres = glob("data" . '/*');
+
+        
+        $prescription = trouveNom($contenuPres, $signaturePres);
+        
 
     ?>
 
@@ -64,22 +73,27 @@
 
                         echo '<p> Motif de visite : ' . $instances2[$lienClique][10] ;
                         ?>
-                        </br></br>
-                        <a href="index.php" class="btn btn-success" title="Retour"> Retour </a>
-                        <?php
-                            // Affiche la dernière prescription sur un nouvel onglet
-                            if ($prescription != null) {
-                                echo '<a href="#" class="btn btn-warning text-white" id="dernierePrescription">Dernière Prescription</a>';
-                                echo '<script>';
-                                echo 'var prescription = "' . $prescription . '";';
-                                echo '</script>';
-                            }
-                            ?>
-                            <script>
-                            document.getElementById('dernierePrescription').addEventListener('click', function() {
-                                window.open(prescription);
-                            });
-                            </script>
+
+                        <div class="md-4>
+                            <form action="index.php" method="post">
+                                <button type="button" class="btn btn-danger" onclick="history.back()">Retour</button>
+                            </form>
+                            <?php
+                                // Affiche la dernière prescription sur un nouvel onglet
+                                if ($prescription != null) {
+                                    echo '<a href="#" class="btn btn-warning text-white" id="dernierePrescription">Dernière Prescription</a>';
+                                    echo '<script>';
+                                    echo 'var prescription = "' . $prescription . '";';
+                                    echo '</script>';
+                                }
+                                ?>
+                                <script>
+                                document.getElementById('dernierePrescription').addEventListener('click', function() {
+                                    window.open(prescription);
+                                });
+                                </script>
+                        </div>
+                        <br>
                         
                     </div>
                 </div>
@@ -95,7 +109,7 @@
             <p> Ajout document : (taille max --> 10 Mo)
             <p>  -  Prescription : (Fichier PDF)
             <p>  -  Photo : (Format Photo : 800x600)
-            <form action=# method="post"  enctype="multipart/form-data">
+            <form action='#' method="post"  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-4">
                         <select class="form-select" name='typeDoc'>
@@ -114,13 +128,26 @@
                 <input type="submit" class="btn btn-success" name="submit">
             </form>
 
+            
+
             <?php
                 // Enregistrement du fichier dans la base de donnée et dans le dossier local data
                 if (isset($_POST["submit"])) {
+                    
+                    header("Location: index.php?page=afficher&lien=".$lienClique."");
+                    
+                    
+                   
+                    
+                    
+                    
+                    
                     if (isset($_FILES["userfile"]) && $_FILES["userfile"]["error"] == 0) {
                         $targetDirectory = "data/"; 
                         $typeDoc = $_POST["typeDoc"];
                         $targetFile = $targetDirectory . $instances2[$lienClique][0] . "_" . basename($_FILES["userfile"]["name"]);
+                        
+                        
                         
                         if (verificationTaille($_FILES)) {
                             echo "Erreur : La taille du fichier dépasse la limite autorisée.";
@@ -140,6 +167,8 @@
                                 $fichier = $instances2[$lienClique][0] . "_" .$_FILES['userfile']['name'];
                                 echo $fichier;
                                 ajoutDocument($connexion, $fichier, $instances2[$lienClique][1], $typeDoc);
+                                echo "hhihhi";
+                                ajoutHash($connexion, $fichier);
                             } else {
                                 echo "Une erreur s'est produite lors du téléchargement du document.";
                             }

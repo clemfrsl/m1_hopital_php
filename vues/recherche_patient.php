@@ -2,6 +2,7 @@
 <!-- CLÉMENT FRESNEL -->
 <!-- ZOÉ MARTINEZ -->
 <?php
+
     $connexion = getConnexionBD();
     $message = " ";
 
@@ -53,9 +54,11 @@
         
         $instances = getInstancesAffichage($connexion, $_SESSION['nom'], $_SESSION['motif'], $_SESSION['pays'], $_SESSION['dateMin'], $_SESSION['dateMax']);
         $_SESSION['instances'] = $instances;
-    }
         
-    
+        
+        
+    }
+       
 ?>
 
 
@@ -172,7 +175,13 @@
                 </br>
                 <div class="md-3 text-center">
                     <button type="submit" name="submit" class="btn btn-success">Rechercher</button>
-                    <button type='reset' class="btn btn-danger" name="reset" value="Réinitialiser"> Réinitialiser </button>
+                    <script>
+                        function redirectToIndex() {
+                            window.location.href = 'index.php';
+                        }
+                    </script>
+                    
+                    <button type="reset" class="btn btn-danger" onclick="redirectToIndex()">Réinitialiser</button>
                 </div>
 
             </form>
@@ -185,6 +194,14 @@
                     <?php
                         if(isset($_POST['submit']))
                         {
+                            if(empty($instances)) {
+                                echo '<div class="card bg-secondary text-white" style="width: 18rem;">';
+                                echo '<div class="card-body">';
+                                echo "Il n'y a pas de résultats avec vos critères de recherche";
+                                echo '</div>';
+                                echo '</div>';
+                                
+                            }
                             $i = 0;
                             foreach ($instances as $instance) {
                                 // Boucle pour afficher les résultats sous forme de cartes qui contiennent le lien vers fiche_patient

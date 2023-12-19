@@ -116,9 +116,40 @@ function countInstances($connexion, $nomTable) {
     }
 
     function verifierFormat($fichier) {
-        $largeurMax = 800; 
-        $hauteurMax = 600; 
+        $largeurMax = 1000;
+        $hauteurMax = 1000; 
         list($largeur, $hauteur) = getimagesize($fichier["userfile"]["tmp_name"]);
         return $largeur > $largeurMax || $hauteur > $hauteurMax;
+    }
+    
+    function ajoutHash($connexion, $fichier) {
+        $chemin = "data/".$fichier;
+        echo $chemin;
+        $signature = hash_file('sha256', $chemin);
+        
+        $requeteCodeMedia = "SELECT MAX(CodeMedia) FROM Media";
+        echo $requeteCodeMedia;
+        $resCodeMedia = mysqli_query($connexion, $requeteCodeMedia);
+        $codeMedia = mysqli_fetch_all($resCodeMedia, PDO::FETCH_ASSOC);
+        $requeteUpdate = "UPDATE Media SET Signature='".$signature."' WHERE CodeMedia=".$codeMedia[0][0].";";
+        
+        $res = mysqli_query($connexion, $requeteUpdate);
+     
+        return $res;
+        
+    }
+    
+    function trouveNom($tab, $signature) {
+        $res = NULL;
+        
+        foreach ($tab as $element) {
+            $signatureElement = hash_file('sha256', $element);
+            
+            if($signatureElement == $signature) {
+                $res = $element;
+            }
+        }
+        
+        return $res;
     }
 ?>
