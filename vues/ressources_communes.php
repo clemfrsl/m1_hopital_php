@@ -39,7 +39,7 @@ function countInstances($connexion, $nomTable) {
 }
 
     
-    // retourne les instances d'une table $nomTable
+    // Retourne les instances d'une table $nomTable
     function getInstances($connexion, $nomTable, $nomColonne) {
         $requete = "SELECT $nomColonne FROM $nomTable ORDER BY $nomColonne";
         $res = mysqli_query($connexion, $requete);
@@ -88,7 +88,7 @@ function countInstances($connexion, $nomTable) {
        
     }
     
-    //ajout prescription
+    // Ajout prescription
     function ajoutDocument($connexion, $fichier, $nom, $type) {
         
         $requeteCodePatient = "SELECT CodePatients FROM Patients WHERE Nom='".$nom."';";
@@ -103,25 +103,20 @@ function countInstances($connexion, $nomTable) {
         return $res;
     }
 
-    //verifie si est un fichier pdf
+    // Vérifie si est un fichier pdf
     function estPDF($fichier) {
         $fichierInfo = pathinfo($fichier["userfile"]["name"]);
         $fichierExtension = strtolower($fichierInfo['extension']);
         return strtolower($fichierExtension) == "pdf";
     }
 
+    // Vérifie la taille du fichier
     function verificationTaille($fichier) {
         $maxFileSize = 10000000; // 10 Mo (en octets)
         return $fichier["userfile"]["size"] > $maxFileSize;
     }
-
-    function verifierFormat($fichier) {
-        $largeurMax = 600;
-        $hauteurMax = 800; 
-        list($largeur, $hauteur) = getimagesize($fichier["userfile"]["tmp_name"]);
-        return $largeur > $largeurMax || $hauteur > $hauteurMax;
-    }
     
+    // Ajoute la signature hash dans la base de donnée
     function ajoutHash($connexion, $fichier) {
         $chemin = "data/".$fichier;
         echo $chemin;
@@ -139,6 +134,7 @@ function countInstances($connexion, $nomTable) {
         
     }
     
+    // Renvoie le nom du fichier qui posséde la $signature hash dans le fichier $tab
     function trouveNom($tab, $signature) {
         $res = NULL;
         

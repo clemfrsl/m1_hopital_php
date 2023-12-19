@@ -89,7 +89,6 @@
                                     echo '</script>';
                                 }
                                 ?>
-
                                 <script>
                                 document.getElementById('dernierePrescription').addEventListener('click', function() {
                                     window.open(prescription);
@@ -113,6 +112,7 @@
             <p> Ajout document : (taille max --> 10 Mo)
             <p>  -  Prescription : (Fichier PDF)
 
+             <!-- Formulaire pour le type de document et le document -->
             <form action='#' method="post"  enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-4">
@@ -129,7 +129,10 @@
                     </div>
                 </div>
                 <br>
+                 <!-- Bouton pour ajouter le document -->
                 <input type="submit" class="btn btn-success" name="submit">
+
+                 <!-- Message d'erreur -->
                 <?php echo $_SESSION['message']; ?>
             </form>
             
@@ -139,6 +142,7 @@
                 // Enregistrement du fichier dans la base de donnée et dans le dossier local data
                 if (isset($_POST["submit"])) {
 
+                    //Rafraichit la page quand le bouton est enclancher
                     header("Location: index.php?page=afficher&lien=".$lienClique."");
 
                     if (isset($_FILES["userfile"]) && $_FILES["userfile"]["error"] == 0) {
@@ -146,6 +150,7 @@
                         $typeDoc = $_POST["typeDoc"];
                         $targetFile = $targetDirectory . $instances2[$lienClique][0] . "_" . basename($_FILES["userfile"]["name"]);
                         
+                        //Vérification des contraintes et enregistrement de l'erreur dans message
                         if (verificationTaille($_FILES)) {
                             $_SESSION['message'] =  "Erreur : La taille du fichier dépasse la limite autorisée.";
 
